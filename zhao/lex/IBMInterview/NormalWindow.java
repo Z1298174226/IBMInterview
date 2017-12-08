@@ -20,21 +20,21 @@ public class NormalWindow implements Runnable {
         Custom cs = null;
         while(true) {
             try {
+                TimeUnit.MILLISECONDS.sleep(10);
                 client.lock.lock();
                 try {
                     if (Client.queue.isEmpty())
                         client.empty.await();
-                    boolean marked = false;
                     for(Custom custom : Client.queue) {
                         if(custom.getCustomType() == CustomType.NORMAL) {
                             cs = custom;
                             Client.queue.remove(custom);
-                            marked = true;
                             break;
                         }
                     }
-                    if(!marked)
-                        client.empty.await();
+                    if(cs == null) {
+                        client.normalEmpty.await();
+                    }
                     long waitedTime = System.currentTimeMillis() - client.getClientStartTime() - cs.getCustomArriveTime().getMinutes() * 60 * 1000;
                     System.out.println("General Window(" + this.windowName + ") is Servicing for Custom "
                             + cs.getId() + ", Custom Type: " + cs.getCustomType().name() + ", arrival time: "

@@ -1,5 +1,6 @@
 package com.zhao.lex.IBMInterview;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -19,20 +20,19 @@ public class VIPWindow implements Runnable {
         Custom cs = null;
         while(true) {
             try{
+                TimeUnit.MILLISECONDS.sleep(30);
                 client.lock.lock();
-                try{
+                try {
                     if(Client.queue.isEmpty())
                         client.empty.await();
-                    boolean marked = false;
                     for(Custom custom : Client.queue) {
                         if(custom.getCustomType() == CustomType.VIP) {
-                            marked = true;
                             cs = custom;
                             Client.queue.remove(custom);
                             break;
                         }
                     }
-                    if(!marked)
+                    if(cs == null)
                         cs = Client.queue.poll();
                     long waitedTime = System.currentTimeMillis() - client.getClientStartTime() - cs.getCustomArriveTime().getMinutes() * 60 * 1000;
                     System.out.println("VIP Window (" + this.windowName + ") is Servicing for Custom " + cs.getId()

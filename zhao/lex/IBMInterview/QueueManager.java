@@ -26,11 +26,12 @@ public class QueueManager implements Runnable {
 
                 }
             }
-            System.out.println(String.format("The Customer %3d is comming, ", cs.getId()) + "now is : " + String.format("%1$tF %1$tR", cs.getCustomArriveTime()));
             client.lock.lock();
             try{
+                System.out.println(String.format("The Customer%3d is comming, ", cs.getId()) + "now is : " + String.format("%1$tF %1$tR", cs.getCustomArriveTime()));
                 Client.queue.add(cs);
                 client.empty.signal();
+                client.normalEmpty.signal();
             }finally {
                 client.lock.unlock();
             }

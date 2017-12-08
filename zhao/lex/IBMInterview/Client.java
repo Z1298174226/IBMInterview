@@ -19,12 +19,14 @@ public class Client {
     private static Queue<Custom> list = new LinkedList<Custom>();
     public Lock lock;
     public Condition empty;
+    public Condition normalEmpty;
     public long clientStartTime;
 
     public Client() {
         this.clientStartTime = System.currentTimeMillis();
         lock = new ReentrantLock();
         empty = lock.newCondition();
+        normalEmpty = lock.newCondition();
     }
 
     public long getClientStartTime() {
@@ -69,12 +71,14 @@ public class Client {
 
     public static void main(String[] args) {
         Client client = new Client();
-        ExecutorService executor = Executors.newFixedThreadPool(5);
+        ExecutorService executor = Executors.newFixedThreadPool(10);
         executor.execute(new QueueManager(client));
-        executor.execute(new NormalWindow("The Normal (1)", client));
-        executor.execute(new NormalWindow("The Normal (2)", client));
-        executor.execute(new NormalWindow("The Normal (3)", client));
-        executor.execute(new VIPWindow("The VIP", client));
+        executor.execute(new NormalWindow("普通窗口（1）", client));
+        executor.execute(new NormalWindow("普通窗口（2）", client));
+        executor.execute(new NormalWindow("普通窗口（3）", client));
+        executor.execute(new NormalWindow("普通窗口（4）", client));
+        executor.execute(new VIPWindow("VIP尊享窗口（1）", client));
+        executor.execute(new VIPWindow("VIP尊享窗口（2）", client));
         executor.shutdown();
     }
 
