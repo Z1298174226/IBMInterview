@@ -17,9 +17,9 @@ public class NormalWindow implements Runnable {
 
     @Override
     public void run() {
-        Custom cs = null;
         while(true) {
             try {
+                Custom cs = null;
                 TimeUnit.MILLISECONDS.sleep(10);
                 client.lock.lock();
                 try {

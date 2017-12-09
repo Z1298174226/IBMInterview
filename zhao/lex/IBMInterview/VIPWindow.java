@@ -17,9 +17,9 @@ public class VIPWindow implements Runnable {
     }
     @Override
     public void run() {
-        Custom cs = null;
         while(true) {
             try{
+                Custom cs = null;
                 TimeUnit.MILLISECONDS.sleep(30);
                 client.lock.lock();
                 try {
